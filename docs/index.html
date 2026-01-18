@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ExoNova – AI-Based Space Debris Tracking and Avoidance System</title>
+
     <style>
-        /* Global Styles */
         :root {
             --primary-dark: #0a0e17;
             --secondary-dark: #121826;
@@ -13,11 +13,6 @@
             --accent-cyan: #00e6ff;
             --light-gray: #e0e0e0;
             --medium-gray: #8a8fa3;
-            --danger: #ff4757;
-            --success: #2ed573;
-            --border-radius: 8px;
-            --section-spacing: 5rem;
-            --container-width: 1200px;
         }
 
         * {
@@ -27,561 +22,183 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            background-color: var(--primary-dark);
+            background: var(--primary-dark);
             color: var(--light-gray);
             line-height: 1.6;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(18, 24, 38, 0.9) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(0, 180, 240, 0.1) 0%, transparent 20%);
-            min-height: 100vh;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .container {
-            width: 100%;
-            max-width: var(--container-width);
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Navigation */
         header {
-            background-color: rgba(10, 14, 23, 0.95);
-            border-bottom: 1px solid rgba(0, 180, 240, 0.2);
             position: sticky;
             top: 0;
+            background: rgba(10,14,23,0.95);
+            border-bottom: 1px solid rgba(0,180,240,0.2);
             z-index: 100;
-            backdrop-filter: blur(10px);
         }
 
         nav {
+            max-width: 1200px;
+            margin: auto;
+            padding: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 0;
         }
 
         .logo {
             font-size: 1.8rem;
-            font-weight: 700;
+            font-weight: bold;
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
             -webkit-background-clip: text;
-            background-clip: text;
             color: transparent;
-            letter-spacing: 1px;
         }
 
         .nav-links {
+            list-style: none;
             display: flex;
             gap: 2rem;
-            list-style: none;
         }
 
         .nav-links a {
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.5rem 0;
-            position: relative;
-            transition: color 0.3s ease;
+            color: var(--light-gray);
+            text-decoration: none;
         }
 
         .nav-links a:hover {
             color: var(--accent-cyan);
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-            transition: width 0.3s ease;
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: auto;
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Hero Section */
         .hero {
-            padding: 6rem 0 4rem;
             text-align: center;
-            background: radial-gradient(ellipse at center, rgba(0, 180, 240, 0.1) 0%, transparent 70%);
+            padding: 6rem 2rem;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
+            font-size: 3rem;
             background: linear-gradient(90deg, var(--accent-blue), white);
             -webkit-background-clip: text;
-            background-clip: text;
             color: transparent;
-            line-height: 1.2;
         }
 
         .hero p {
-            font-size: 1.3rem;
             color: var(--medium-gray);
-            max-width: 800px;
-            margin: 0 auto 2rem;
-        }
-
-        .tagline {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            background: rgba(0, 180, 240, 0.1);
-            border: 1px solid rgba(0, 180, 240, 0.3);
-            border-radius: 30px;
-            font-size: 1.1rem;
-            color: var(--accent-cyan);
             margin-top: 1rem;
-        }
-
-        /* Sections Common */
-        section {
-            padding: var(--section-spacing) 0;
-        }
-
-        section:nth-child(even) {
-            background-color: rgba(18, 24, 38, 0.5);
+            font-size: 1.2rem;
         }
 
         .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
+            font-size: 2.3rem;
+            margin-bottom: 2rem;
             color: white;
-            position: relative;
-            display: inline-block;
         }
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-            border-radius: 2px;
-        }
-
-        .section-content {
-            font-size: 1.15rem;
-            color: var(--light-gray);
-        }
-
-        .section-content p {
-            margin-bottom: 1.5rem;
-        }
-
-        /* Overview */
-        .highlight-box {
-            background: linear-gradient(145deg, rgba(18, 24, 38, 0.9), rgba(10, 14, 23, 0.9));
-            border: 1px solid rgba(0, 180, 240, 0.2);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .highlight-box h3 {
-            color: var(--accent-cyan);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        /* Problem */
-        .stats-grid {
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 2rem;
-            margin-top: 3rem;
         }
 
-        .stat-card {
-            background: rgba(18, 24, 38, 0.8);
-            border-radius: var(--border-radius);
+        .stat-box {
+            background: var(--secondary-dark);
             padding: 2rem;
             text-align: center;
             border-top: 4px solid var(--accent-blue);
-            transition: transform 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--accent-cyan);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--medium-gray);
-            font-size: 1.1rem;
-        }
-
-        /* System Architecture */
-        .architecture-img {
-            width: 100%;
-            max-width: 900px;
-            height: 500px;
-            margin: 3rem auto;
-            background: linear-gradient(145deg, rgba(18, 24, 38, 0.9), rgba(10, 14, 23, 0.9));
-            border: 1px solid rgba(0, 180, 240, 0.2);
-            border-radius: var(--border-radius);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--medium-gray);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .architecture-img::before {
-            content: 'System Architecture Diagram';
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+        .stat-box h3 {
+            font-size: 2.5rem;
             color: var(--accent-cyan);
         }
 
-        .architecture-img::after {
-            content: 'assets/unnamed (4) - Copy.png';
-            font-size: 1rem;
-            color: var(--medium-gray);
-        }
-
-        /* Report & Slides */
-        .documents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .document-card {
-            background: linear-gradient(145deg, rgba(18, 24, 38, 0.9), rgba(10, 14, 23, 0.9));
-            border-radius: var(--border-radius);
-            padding: 2.5rem;
-            text-align: center;
-            border: 1px solid rgba(0, 180, 240, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .document-card:hover {
-            border-color: var(--accent-blue);
-            box-shadow: 0 10px 25px rgba(0, 180, 240, 0.1);
-        }
-
-        .document-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            color: var(--accent-blue);
-        }
-
-        .document-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .document-card p {
-            color: var(--medium-gray);
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.9rem 2rem;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-            color: var(--primary-dark);
-            border: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 180, 240, 0.3);
-        }
-
-        /* Future Scope */
-        .future-list {
-            list-style: none;
-            margin-top: 2rem;
-        }
-
-        .future-list li {
-            padding: 1.2rem;
-            margin-bottom: 1rem;
-            background: rgba(18, 24, 38, 0.8);
-            border-left: 4px solid var(--accent-blue);
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
-            transition: transform 0.3s ease;
-        }
-
-        .future-list li:hover {
-            transform: translateX(10px);
-            background: rgba(18, 24, 38, 0.9);
-        }
-
-        .future-list li::before {
-            content: '▶';
-            color: var(--accent-cyan);
-            margin-right: 1rem;
-            font-size: 0.9rem;
-        }
-
-        /* Footer */
         footer {
-            background-color: var(--secondary-dark);
-            padding: 3rem 0;
+            background: var(--secondary-dark);
             text-align: center;
-            border-top: 1px solid rgba(0, 180, 240, 0.2);
-            margin-top: 4rem;
+            padding: 3rem 1rem;
+            border-top: 1px solid rgba(0,180,240,0.2);
         }
 
-        .footer-content {
+        footer p {
             color: var(--medium-gray);
-            font-size: 1.1rem;
-        }
-
-        .copyright {
-            margin-top: 2rem;
-            color: var(--medium-gray);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .nav-links a {
-                font-size: 1rem;
-            }
-
-            .documents-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                gap: 0.5rem;
-                align-items: flex-end;
-            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">ExoNova</div>
-                <ul class="nav-links">
-                    <li><a href="#overview">Overview</a></li>
-                    <li><a href="#problem">Problem</a></li>
-                    <li><a href="#architecture">System Architecture</a></li>
-                    <li><a href="#report">Report</a></li>
-                    <li><a href="#slides">Slides</a></li>
-                    <li><a href="#future">Future Scope</a></li>
-                </ul>
-            </nav>
+
+<header>
+    <nav>
+        <div class="logo">ExoNova</div>
+        <ul class="nav-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#future">Future</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>AI-Based Space Debris Tracking & Avoidance</h1>
+    <p>Predicting orbital threats before they become disasters</p>
+</section>
+
+<section id="overview">
+    <h2 class="section-title">Project Overview</h2>
+    <p>
+        ExoNova is an AI-driven space situational awareness system designed
+        to track orbital debris, predict collision risks, and assist
+        spacecraft in autonomous avoidance planning.
+    </p>
+</section>
+
+<section id="problem">
+    <h2 class="section-title">The Space Debris Problem</h2>
+
+    <div class="stats">
+        <div class="stat-box">
+            <h3>34K+</h3>
+            <p>Tracked Objects</p>
         </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>ExoNova – AI-Based Space Debris Tracking and Avoidance System</h1>
-            <p>Revolutionizing orbital safety through advanced artificial intelligence and predictive analytics to safeguard space assets from debris collisions.</p>
-            <div class="tagline">Precision Tracking. Predictive Avoidance. Orbital Security.</div>
+        <div class="stat-box">
+            <h3>128M+</h3>
+            <p>Micro Debris</p>
         </div>
-    </section>
-
-    <!-- Overview Section -->
-    <section id="overview">
-        <div class="container">
-            <h2 class="section-title">Overview</h2>
-            <div class="section-content">
-                <p>ExoNova is an advanced AI-driven system designed to track, analyze, and predict the trajectories of space debris in Earth's orbit. By leveraging machine learning algorithms and sensor fusion from multiple sources, ExoNova provides real-time monitoring and collision avoidance recommendations for satellites and spacecraft.</p>
-                
-                <div class="highlight-box">
-                    <h3>Core Mission</h3>
-                    <p>To create a sustainable orbital environment by preventing catastrophic collisions, protecting critical space infrastructure, and enabling safe space exploration for future generations.</p>
-                </div>
-
-                <p>The system integrates data from ground-based radar, optical telescopes, and satellite sensors to maintain a comprehensive catalog of orbital objects. Our proprietary AI models analyze historical and real-time data to predict potential conjunction events with exceptional accuracy.</p>
-                
-                <p>ExoNova serves government space agencies, commercial satellite operators, and international space organizations, providing actionable intelligence for collision avoidance maneuvers and long-term orbital traffic management.</p>
-            </div>
+        <div class="stat-box">
+            <h3>7–8 km/s</h3>
+            <p>Impact Speed</p>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Problem Section -->
-    <section id="problem">
-        <div class="container">
-            <h2 class="section-title">The Space Debris Problem</h2>
-            <div class="section-content">
-                <p>Earth's orbit has become increasingly congested with defunct satellites, spent rocket stages, and fragments from collisions or explosions. This debris poses a significant threat to operational spacecraft, satellites, and human spaceflight missions.</p>
-                
-                <p>The Kessler Syndrome—a theoretical scenario where the density of objects in low Earth orbit is high enough that collisions could cause a cascade of further collisions—represents an existential threat to space operations. Even millimeter-sized debris traveling at orbital velocities (approximately 7-8 km/s) can cause catastrophic damage to spacecraft.</p>
+<section id="architecture">
+    <h2 class="section-title">System Architecture</h2>
+    <p>
+        The ExoNova architecture integrates sensor fusion, AI prediction
+        models, and real-time visualization pipelines to maintain
+        continuous orbital awareness.
+    </p>
+</section>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">34,000+</div>
-                        <div class="stat-label">Trackable Debris Objects (>10cm)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">128M+</div>
-                        <div class="stat-label">Micro-debris Particles (<1cm)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">560+</div>
-                        <div class="stat-label">Debris-generating Events Since 1961</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">$12B+</div>
-                        <div class="stat-label">Annual Risk to Space Assets</div>
-                    </div>
-                </div>
+<section id="future">
+    <h2 class="section-title">Future Scope</h2>
+    <ul>
+        <li>Autonomous collision avoidance</li>
+        <li>AI-enhanced orbital prediction</li>
+        <li>Deep-space and lunar expansion</li>
+        <li>Commercial space traffic management</li>
+    </ul>
+</section>
 
-                <p>Current tracking systems are limited in their capacity to monitor smaller debris and predict complex orbital interactions. ExoNova addresses these limitations through advanced AI techniques, providing comprehensive situational awareness in near-Earth space.</p>
-            </div>
-        </div>
-    </section>
+<footer>
+    <p>© 2023 ExoNova Project</p>
+    <p>Static website hosted via GitHub Pages</p>
+</footer>
 
-    <!-- System Architecture Section -->
-    <section id="architecture">
-        <div class="container">
-            <h2 class="section-title">System Architecture</h2>
-            <div class="section-content">
-                <p>ExoNova employs a multi-layered architecture that integrates data acquisition, processing, analysis, and dissemination components into a cohesive system for space situational awareness.</p>
-                
-                <p>The architecture consists of three primary layers: the Data Acquisition Layer (sensor networks), the Processing & AI Layer (computational infrastructure), and the User Interface & API Layer (dissemination platforms). Each layer is designed for scalability, redundancy, and interoperability with existing space surveillance networks.</p>
-                
-                <div class="architecture-img">
-                    <!-- Image placeholder for assets/architecture.png -->
-                    <!-- In a real implementation, this would be an actual image -->
-                </div>
-
-                <p>Our AI engine utilizes convolutional neural networks for image recognition from optical sensors, recurrent neural networks for trajectory prediction, and graph neural networks to model complex orbital interactions. The system processes over 2 terabytes of observational data daily, updating orbital parameters every 6 hours for all tracked objects.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Report Section -->
-    <section id="report">
-        <div class="container">
-            <h2 class="section-title">Technical Report</h2>
-            <div class="documents-grid">
-                <div class="document-card">
-                    <div class="document-icon">📄</div>
-                    <h3>Complete Technical Documentation</h3>
-                    <p>Detailed 85-page report covering system design, algorithms, implementation details, validation methodologies, and performance metrics of the ExoNova system.</p>
-                    <a href="COMPLETE_SYSTEM_REPORT.pdf" class="btn" target="_blank">Download Full Report (PDF)</a>
-                </div>
-            </div>
-            <div class="section-content" style="margin-top: 2rem;">
-                <p>The comprehensive technical report includes in-depth explanations of our machine learning models, data processing pipelines, simulation results, and comparative analysis with existing debris tracking systems. It also contains appendices with raw data, algorithm pseudocode, and validation test cases.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Slides Section -->
-    <section id="slides">
-        <div class="container">
-            <h2 class="section-title">Presentation Slides</h2>
-            <div class="documents-grid">
-                <div class="document-card">
-                    <div class="document-icon">📊</div>
-                    <h3>Project Presentation</h3>
-                    <p>Concise 45-slide presentation summarizing the ExoNova system, its technical innovations, implementation timeline, and business case for stakeholders.</p>
-                    <a href="AI_Swizzle_Nozzle_Autonomous_Debris_Avoidance%20-%20Copy.pdf" class="btn" target="_blank">Download Slides (PDF)</a>
-                </div>
-            </div>
-            <div class="section-content" style="margin-top: 2rem;">
-                <p>The presentation deck is designed for technical and non-technical audiences, featuring visualizations of orbital mechanics, AI model architectures, system interfaces, and roadmap for future development. Ideal for stakeholder briefings and conference presentations.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Future Scope Section -->
-    <section id="future">
-        <div class="container">
-            <h2 class="section-title">Future Scope</h2>
-            <div class="section-content">
-                <p>ExoNova represents the foundation for next-generation space traffic management. Our development roadmap includes several key initiatives to enhance system capabilities and expand applications.</p>
-                
-                <ul class="future-list">
-                    <li><strong>Quantum-enhanced Prediction Models:</strong> Integration of quantum computing algorithms for ultra-precise orbital calculations and complex multi-body simulations.</li>
-                    <li><strong>Autonomous Avoidance Maneuvers:</strong> Development of direct spacecraft integration for AI-recommended, automated collision avoidance without human intervention.</li>
-                    <li><strong>Global Sensor Network Expansion:</strong> Deployment of additional ground-based and space-based sensors in partnership with international space agencies.</li>
-                    <li><strong>Space Debris Remediation Planning:</strong> AI-driven analysis to identify optimal targets and methods for active debris removal missions.</li>
-                    <li><strong>Commercial Space Traffic Management:</strong> Real-time subscription services for commercial satellite operators with customized risk assessment and alerting.</li>
-                    <li><strong>Lunar and Deep Space Extension:</strong> Adaptation of tracking algorithms for cislunar space and Mars orbital environments in preparation for interplanetary missions.</li>
-                    <li><strong>Public API and Open Data Initiative:</strong> Limited public access to curated datasets and prediction models to foster academic research and public awareness.</li>
-                </ul>
-                
-                <p>These initiatives position ExoNova as a critical component of sustainable space operations, contributing to the long-term viability of Earth's orbital environment as a resource for humanity.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="logo" style="display: inline-block; margin-bottom: 1.5rem;">ExoNova</div>
-                <p>AI-Based Space Debris Tracking and Avoidance System</p>
-                <p>Project developed for advanced space situational awareness and orbital safety</p>
-            </div>
-            <div class="copyright">
-                &copy; 2023 ExoNova Project Team. All project materials and data are for demonstration purposes.
-                <br>This is a static informational website. No actual tracking services are being provided.
-            </div>
-        </div>
-    </footer>
 </body>
 </html>
