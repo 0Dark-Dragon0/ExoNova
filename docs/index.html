@@ -1,397 +1,882 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ExoNova | AI-Based Space Debris Tracking & Avoidance System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ExoNova – AI-Based Space Debris Tracking and Avoidance System. A professional research project focusing on orbital safety, collision prediction, and autonomous maneuvering using deep learning.">
+    <meta name="keywords" content="Space Debris, AI, Space Situational Awareness, LSTM, Kalman Filter, Orbital Mechanics, Satellite Safety, ExoNova">
+    <meta name="author" content="ExoNova Research Team">
+    <title>ExoNova | AI-Based Space Debris Tracking and Avoidance System</title>
+    <style>
+        /* --------------------------------------------------
+           GLOBAL VARIABLES & RESET
+        -------------------------------------------------- */
+        :root {
+            --bg-deep: #050b14;
+            --bg-panel: #0a1525;
+            --bg-card: #0f1f33;
+            --primary-cyan: #00f2ff;
+            --primary-blue: #0077ff;
+            --accent-purple: #bc13fe;
+            --text-main: #e0e6ed;
+            --text-muted: #94a3b8;
+            --border-color: #1e3a5f;
+            --font-stack: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --max-width: 1200px;
+            --nav-height: 70px;
+        }
 
-<!-- =========================
-     GLOBAL STYLES
-========================= -->
-<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* =========================
-   ROOT VARIABLES
-========================= */
-:root {
-    --bg-main: #0a0e17;
-    --bg-secondary: #121826;
-    --bg-card: #161d2f;
-    --accent-blue: #00b4f0;
-    --accent-cyan: #00e6ff;
-    --text-main: #e0e0e0;
-    --text-muted: #8a8fa3;
-    --danger: #ff4757;
-    --success: #2ed573;
-}
+        html {
+            scroll-behavior: smooth;
+        }
 
-/* =========================
-   RESET
-========================= */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-/* =========================
-   BASE
-========================= */
-body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--bg-main);
-    color: var(--text-main);
-    line-height: 1.7;
-}
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
 
-/* =========================
-   LINKS
-========================= */
-a {
-    color: inherit;
-    text-decoration: none;
-}
+        ul {
+            list-style: none;
+        }
 
-/* =========================
-   CONTAINER
-========================= */
-.container {
-    max-width: 1300px;
-    margin: auto;
-    padding: 0 2rem;
-}
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
 
-/* =========================
-   HEADER
-========================= */
-header {
-    position: sticky;
-    top: 0;
-    background: rgba(10,14,23,0.95);
-    border-bottom: 1px solid rgba(0,180,240,0.2);
-    z-index: 999;
-}
+        /* --------------------------------------------------
+           TYPOGRAPHY
+        -------------------------------------------------- */
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.8rem 0;
-}
+        h1 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.logo {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-    -webkit-background-clip: text;
-    color: transparent;
-    letter-spacing: 1px;
-}
+        h2 {
+            font-size: 2rem;
+            border-left: 4px solid var(--primary-cyan);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+        }
 
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-}
+        h3 {
+            font-size: 1.5rem;
+            color: var(--primary-cyan);
+        }
 
-.nav-links li a {
-    font-weight: 500;
-    color: var(--text-main);
-}
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+        }
 
-.nav-links li a:hover {
-    color: var(--accent-cyan);
-}
+        strong {
+            color: #fff;
+        }
 
-/* =========================
-   HERO
-========================= */
-.hero {
-    text-align: center;
-    padding: 7rem 2rem;
-    background:
-      radial-gradient(circle at top, rgba(0,180,240,0.15), transparent 60%);
-}
+        /* --------------------------------------------------
+           LAYOUT UTILITIES
+        -------------------------------------------------- */
+        .container {
+            width: 90%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
 
-.hero h1 {
-    font-size: 3.8rem;
-    background: linear-gradient(90deg, var(--accent-blue), #ffffff);
-    -webkit-background-clip: text;
-    color: transparent;
-}
+        section {
+            padding: 5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-.hero p {
-    margin-top: 1.5rem;
-    font-size: 1.3rem;
-    color: var(--text-muted);
-}
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
 
-.hero span {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 0.6rem 1.5rem;
-    border-radius: 30px;
-    border: 1px solid rgba(0,180,240,0.4);
-    color: var(--accent-cyan);
-}
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
 
-/* =========================
-   SECTION COMMON
-========================= */
-section {
-    padding: 6rem 0;
-}
+        .text-center {
+            text-align: center;
+        }
 
-.section-title {
-    font-size: 2.8rem;
-    margin-bottom: 2rem;
-    position: relative;
-}
+        .mt-2 {
+            margin-top: 2rem;
+        }
 
-.section-title::after {
-    content: "";
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-    display: block;
-    margin-top: 10px;
-}
+        /* --------------------------------------------------
+           HEADER & NAVIGATION
+        -------------------------------------------------- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: rgba(5, 11, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
 
-/* =========================
-   CARD
-========================= */
-.card {
-    background: var(--bg-card);
-    padding: 2.5rem;
-    border-radius: 10px;
-    border: 1px solid rgba(0,180,240,0.2);
-}
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
 
-/* =========================
-   GRID
-========================= */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2rem;
-}
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-/* =========================
-   STATS
-========================= */
-.stat {
-    text-align: center;
-}
+        .logo span {
+            color: var(--primary-cyan);
+        }
 
-.stat h3 {
-    font-size: 3rem;
-    color: var(--accent-cyan);
-}
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
 
-.stat p {
-    color: var(--text-muted);
-}
+        .nav-links a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+        }
 
-/* =========================
-   FOOTER
-========================= */
-footer {
-    background: var(--bg-secondary);
-    padding: 4rem 2rem;
-    border-top: 1px solid rgba(0,180,240,0.2);
-}
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-cyan);
+        }
 
-footer p {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-}
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-cyan);
+            transition: width 0.3s ease;
+        }
 
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.6rem;
-    }
-    .section-title {
-        font-size: 2.2rem;
-    }
-}
+        .nav-links a:hover::after {
+            width: 100%;
+        }
 
-</style>
+        /* --------------------------------------------------
+           HERO SECTION
+        -------------------------------------------------- */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #0f2540 0%, var(--bg-deep) 70%);
+            padding-top: var(--nav-height);
+            text-align: center;
+            position: relative;
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .hero-content {
+            z-index: 1;
+            max-width: 900px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 242, 255, 0.1);
+            background: rgba(10, 21, 37, 0.6);
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .tagline {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid var(--primary-cyan);
+            border-radius: 50px;
+            color: var(--primary-cyan);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        /* --------------------------------------------------
+           CARDS & UI ELEMENTS
+        -------------------------------------------------- */
+        .card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary-blue);
+        }
+
+        .stat-block {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-panel) 0%, rgba(10, 21, 37, 0) 100%);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-cyan));
+            color: #000;
+            font-weight: 700;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 242, 255, 0.1);
+            color: #fff;
+        }
+
+        .download-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+
+        .download-row:last-child {
+            border-bottom: none;
+        }
+
+        .download-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .file-info h4 {
+            margin-bottom: 0.2rem;
+            font-size: 1.1rem;
+        }
+
+        .file-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* --------------------------------------------------
+           SECTIONS SPECIFIC STYLES
+        -------------------------------------------------- */
+        
+        /* Problem Section */
+        .problem-grid {
+            margin-top: 3rem;
+        }
+
+        /* Architecture */
+        .arch-diagram {
+            width: 100%;
+            max-width: 900px;
+            margin: 2rem auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0, 119, 255, 0.1);
+            background: #000;
+        }
+
+        /* AI Models */
+        .model-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .model-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .model-badge {
+            display: inline-block;
+            width: fit-content;
+            padding: 0.2rem 0.6rem;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Data & Assets */
+        .data-card {
+            border-left: 3px solid var(--primary-cyan);
+        }
+
+        /* Technical Report */
+        .report-section {
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-deep) 100%);
+        }
+
+        .report-icon {
+            font-size: 4rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        /* Resources */
+        .resource-card h4 {
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-type {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Future Scope */
+        .future-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .future-list li {
+            position: relative;
+            padding-left: 2.5rem;
+            color: var(--text-muted);
+        }
+
+        .future-list li::before {
+            content: '➤';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary-cyan);
+        }
+
+        .future-list li strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #02050a;
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .copyright {
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+        /* --------------------------------------------------
+           RESPONSIVE
+        -------------------------------------------------- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .nav-links {
+                display: none; /* In a real scenario, JS would toggle a mobile menu */
+            }
+            
+            /* For a static single file without JS, we use a simple horizontal scroll for nav on mobile */
+            .nav-links {
+                display: flex;
+                position: fixed;
+                top: var(--nav-height);
+                left: 0;
+                width: 100%;
+                background: var(--bg-panel);
+                padding: 1rem;
+                overflow-x: auto;
+                border-bottom: 1px solid var(--border-color);
+                white-space: nowrap;
+                z-index: 999;
+            }
+            
+            header {
+                height: auto;
+                padding: 1rem 0;
+            }
+            
+            .container {
+                width: 95%;
+                padding-top: 4rem; /* Space for the nav bar */
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            #hero {
+                padding-top: 120px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
-<header>
-<div class="container">
-<nav>
-<div class="logo">ExoNova</div>
-<ul class="nav-links">
-<li><a href="#overview">Overview</a></li>
-<li><a href="#problem">Problem</a></li>
-<li><a href="#architecture">Architecture</a></li>
-<li><a href="#ai">AI Logic</a></li>
-<li><a href="#future">Future</a></li>
-</ul>
-</nav>
-</div>
-</header>
+    <!-- 3. HEADER / NAVIGATION BAR -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">Exo<span>Nova</span></div>
+            <nav class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#problem">Problem</a>
+                <a href="#architecture">System Architecture</a>
+                <a href="#models">AI Models</a>
+                <a href="#data">Data & Assets</a>
+                <a href="#report">Technical Report</a>
+                <a href="#resources">Resources</a>
+                <a href="#future">Future Scope</a>
+            </nav>
+        </div>
+    </header>
 
-<!-- =========================
-     HERO
-========================= -->
-<section class="hero">
-<h1>AI-Based Space Debris Tracking & Avoidance System</h1>
-<p>Protecting orbital infrastructure using predictive intelligence</p>
-<span>Research-Grade | Static | GitHub Pages</span>
-</section>
+    <!-- 4. HERO SECTION -->
+    <section id="hero">
+        <div class="hero-content">
+            <span class="tagline">Precision Tracking • Predictive Avoidance • Orbital Safety</span>
+            <h1>ExoNova – AI-Based Space Debris Tracking and Avoidance System</h1>
+            <p class="mt-2">
+                Leveraging advanced deep learning architectures and orbital mechanics to secure the future of spaceflight. 
+                ExoNova provides real-time situational awareness and autonomous decision support for satellite operators.
+            </p>
+            <div class="mt-2">
+                <a href="#overview" class="btn">Explore the System</a>
+                <a href="#report" class="btn btn-outline" style="margin-left: 1rem;">Read Technical Report</a>
+            </div>
+        </div>
+    </section>
 
-<!-- =========================
-     OVERVIEW
-========================= -->
-<section id="overview">
-<div class="container">
-<h2 class="section-title">Project Overview</h2>
+    <!-- 5. OVERVIEW SECTION -->
+    <section id="overview">
+        <div class="container">
+            <h2>Project Overview</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Mission Statement</h3>
+                    <p>
+                        The ExoNova project aims to develop a robust, scalable, and autonomous framework for Space Situational Awareness (SSA). 
+                        By integrating state-of-the-art artificial intelligence with astrodynamics, we seek to mitigate the growing risks posed by space debris to critical orbital infrastructure.
+                    </p>
+                    <p>
+                        Current tracking systems rely heavily on manual intervention and static threshold models. ExoNova introduces a dynamic, learning-based approach that adapts to the chaotic nature of orbital decay and non-cooperative objects.
+                    </p>
+                </div>
+                <div>
+                    <h3>Vision & Goals</h3>
+                    <ul style="display: flex; flex-direction: column; gap: 1rem;">
+                        <li><strong>Autonomous Tracking:</strong> Reduce latency between detection and cataloging of debris objects.</li>
+                        <li><strong>Predictive Accuracy:</strong> Achieve sub-meter prediction accuracy for LEO (Low Earth Orbit) conjunctions.</li>
+                        <li><strong>Collision Avoidance:</strong> Provide actionable Delta-V recommendations for autonomous maneuvering.</li>
+                        <li><strong>Orbital Safety:</strong> Contribute to global efforts to prevent the Kessler Syndrome.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="card">
-<p>
-ExoNova is an advanced research-oriented system designed to
-track, predict, and mitigate collision risks caused by space debris.
-The system combines classical orbital mechanics with modern artificial
-intelligence techniques to create a scalable and future-ready
-space situational awareness framework.
-</p>
+    <!-- 6. PROBLEM STATEMENT SECTION -->
+    <section id="problem">
+        <div class="container">
+            <h2>The Orbital Debris Threat</h2>
+            <p>
+                The region of near-Earth space is becoming increasingly congested. Over 6,000 tons of debris are currently orbiting the Earth, traveling at velocities up to 17,500 mph. 
+                Even a fragment the size of a bolt carries kinetic energy capable of destroying a satellite.
+            </p>
+            
+            <div class="grid-3 problem-grid">
+                <div class="stat-block">
+                    <div class="stat-number">36,500+</div>
+                    <div class="stat-label">Objects > 10cm</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Objects 1cm - 10cm</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-number">~7.5 km/s</div>
+                    <div class="stat-label">Avg Impact Velocity</div>
+                </div>
+            </div>
 
-<p>
-Unlike traditional tracking systems that rely purely on deterministic
-models, ExoNova integrates probabilistic AI predictions, uncertainty
-estimation, and continuous learning from historical orbital data.
-</p>
-</div>
-</div>
-</section>
+            <div class="mt-2 grid-2">
+                <div class="card">
+                    <h3>Kessler Syndrome</h3>
+                    <p>
+                        A theoretical cascade scenario where collisions between objects generate debris that increases the likelihood of further collisions. Without intervention, specific orbits could become unusable for generations.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>Economic & Scientific Loss</h3>
+                    <p>
+                        The cost of replacing damaged satellites is immense. Beyond economics, the loss of scientific instrumentation and communication infrastructure impacts global weather forecasting, navigation, and connectivity.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- =========================
-     PROBLEM
-========================= -->
-<section id="problem">
-<div class="container">
-<h2 class="section-title">The Space Debris Problem</h2>
+    <!-- 7. SYSTEM ARCHITECTURE SECTION -->
+    <section id="architecture">
+        <div class="container">
+            <h2>System Architecture</h2>
+            <p>
+                The ExoNova system follows a modular, layered architecture designed to ingest raw sensor data, process it through AI pipelines, and output actionable intelligence.
+            </p>
 
-<div class="grid">
-<div class="card stat">
-<h3>34,000+</h3>
-<p>Tracked Objects &gt; 10cm</p>
-</div>
+            <div class="grid-2 mt-2">
+                <div>
+                    <h4 style="color: var(--primary-cyan);">1. Sensor Layer</h4>
+                    <p>Aggregates data from ground-based radar, optical telescopes, and space-based surveillance (SBSS) networks. Raw data is time-synchronized and noise-filtered.</p>
+                    
+                    <h4 style="color: var(--primary-cyan); margin-top: 1.5rem;">2. Data Processing Layer</h4>
+                    <p>Orbit determination algorithms (SGP4/SDP4) refine raw observations into state vectors. Data cleaning removes sensor artifacts and atmospheric interference.</p>
+                    
+                    <h4 style="color: var(--primary-cyan); margin-top: 1.5rem;">3. AI & Prediction Layer</h4>
+                    <p>Deep learning models (LSTM/GRU) predict future state vectors accounting for non-gravitational perturbations like solar radiation pressure and atmospheric drag.</p>
+                    
+                    <h4 style="color: var(--primary-cyan); margin-top: 1.5rem;">4. Decision & Visualization Layer</h4>
+                    <p>Reinforcement Learning agents evaluate collision probabilities and generate avoidance maneuvers. A real-time 3D dashboard visualizes conjunction events.</p>
+                </div>
+                <div>
+                    <!-- Using the requested filename -->
+                    <img src="unnamed%20(4)%20-%20Copy.png" alt="ExoNova System Architecture Diagram showing flow from Sensors to AI to Decision Support" class="arch-diagram">
+                    <p class="text-center" style="font-size: 0.8rem; margin-top: 1rem; color: #666;">Figure 1: High-level architecture data flow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="card stat">
-<h3>128 Million+</h3>
-<p>Micro-debris &lt; 1cm</p>
-</div>
+    <!-- 8. AI MODELS SECTION -->
+    <section id="models">
+        <div class="container">
+            <h2>AI Models & Methodology</h2>
+            <p>ExoNova utilizes a hybrid approach, combining classical astrodynamics with modern machine learning to overcome the limitations of purely physics-based models in high-density debris fields.</p>
+            
+            <div class="grid-3 mt-2 model-list">
+                <div class="card model-item">
+                    <span class="model-badge">Time-Series Forecasting</span>
+                    <h3>LSTM Networks</h3>
+                    <p>
+                        Long Short-Term Memory networks are employed to capture long-term dependencies in orbital trajectories. They are exceptionally effective at modeling the decay of orbits affected by varying atmospheric density.
+                    </p>
+                </div>
+                
+                <div class="card model-item">
+                    <span class="model-badge">Sequence Processing</span>
+                    <h3>GRU Architecture</h3>
+                    <p>
+                        Gated Recurrent Units offer a more computationally efficient alternative to LSTMs for processing sensor streams. Used in the real-time tracking pipeline for rapid trajectory updates.
+                    </p>
+                </div>
 
-<div class="card stat">
-<h3>7–8 km/s</h3>
-<p>Orbital Velocity</p>
-</div>
+                <div class="card model-item">
+                    <span class="model-badge">State Estimation</span>
+                    <h3>Kalman Filters</h3>
+                    <p>
+                        The Extended Kalman Filter (EKF) serves as the baseline for state estimation. It fuses noisy measurements from multiple sensors to produce the optimal estimate of the debris object's position and velocity.
+                    </p>
+                </div>
 
-<div class="card stat">
-<h3>$12B+</h3>
-<p>Annual Asset Risk</p>
-</div>
-</div>
+                <div class="card model-item">
+                    <span class="model-badge">Uncertainty Quantification</span>
+                    <h3>Monte Carlo Simulation</h3>
+                    <p>
+                        Used to propagate uncertainty through the orbit prediction. We run thousands of simulations with perturbed initial conditions to generate a probability cloud for collision events.
+                    </p>
+                </div>
 
-</div>
-</section>
+                <div class="card model-item">
+                    <span class="model-badge">Decision Making</span>
+                    <h3>Reinforcement Learning</h3>
+                    <p>
+                        An RL agent (PPO algorithm) is trained to optimize Delta-V maneuvers. It learns to balance the fuel cost of maneuvering against the probability of collision, maximizing satellite lifespan.
+                    </p>
+                </div>
 
-<!-- =========================
-     ARCHITECTURE
-========================= -->
-<section id="architecture">
-<div class="container">
-<h2 class="section-title">System Architecture</h2>
+                <div class="card model-item">
+                    <span class="model-badge">Pattern Recognition</span>
+                    <h3>CNN for Optical Data</h3>
+                    <p>
+                        Convolutional Neural Networks assist in the classification of optical telescope images, distinguishing between debris, stars, and active satellites to reduce false positives.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="card">
-<p>
-The ExoNova architecture is divided into four logical layers:
-</p>
+    <!-- 9. DATA & ASSETS SECTION -->
+    <section id="data">
+        <div class="container">
+            <h2>Data & Assets</h2>
+            <p>
+                The training of the ExoNova AI models relies on a curated mix of historical space surveillance data and synthetically generated conjunction scenarios to address data scarcity in catastrophic event classes.
+            </p>
 
-<ul>
-<li>Data Acquisition Layer (Radar, Optical, TLE)</li>
-<li>Physics-Based Propagation Layer</li>
-<li>AI Prediction & Risk Scoring Layer</li>
-<li>Decision & Visualization Layer</li>
-</ul>
+            <div class="grid-2 mt-2">
+                <div class="card data-card">
+                    <h3>Available Datasets</h3>
+                    <p>Download the raw and processed datasets used for model training.</p>
+                    
+                    <a href="debris_avoidance_data.csv" download class="btn" style="margin-bottom: 1rem; width: 100%;">
+                        debris_avoidance_data.csv
+                    </a>
+                    <a href="synthetic_debris_data.csv" download class="btn btn-outline" style="width: 100%;">
+                        synthetic_debris_data.csv
+                    </a>
+                </div>
 
-<p>
-Each layer operates independently yet shares standardized interfaces,
-allowing modular upgrades and research experimentation.
-</p>
-</div>
+                <div class="card data-card">
+                    <h3>Model Artifacts</h3>
+                    <p>Contains the pre-trained weights, model architecture definitions (JSON), and normalization parameters required to run the inference pipeline.</p>
+                    
+                    <div class="mt-2">
+                        <div class="file-info">
+                            <h4>Training AI model-assets.zip</h4>
+                            <span class="file-meta">ZIP Archive • 145 MB • PyTorch/TensorFlow</span>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <a href="Training%20AI%20model-assets.zip" download class="btn">
+                                Download Assets
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-</div>
-</section>
+    <!-- 10. TECHNICAL REPORT SECTION -->
+    <section id="report" class="report-section">
+        <div class="container">
+            <div class="card" style="max-width: 800px; margin: 0 auto; border: 1px solid var(--primary-blue);">
+                <div class="report-icon">📄</div>
+                <h2>Complete Technical Report</h2>
+                <p style="max-width: 600px; margin: 0 auto 2rem auto;">
+                    A comprehensive documentation of the ExoNova system, including algorithm derivations, performance benchmarks, simulation results, and deployment guidelines.
+                </p>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 4px; display: inline-block; margin-bottom: 2rem;">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Document ID:</span> <span style="color: #fff; font-family: monospace;">EN-TR-2023-V1.0</span><br>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Format:</span> <span style="color: #fff;">PDF</span>
+                </div>
 
-<!-- =========================
-     AI LOGIC
-========================= -->
-<section id="ai">
-<div class="container">
-<h2 class="section-title">AI & Prediction Logic</h2>
+                <a href="COMPLETE_SYSTEM_REPORT.pdf" target="_blank" class="btn" style="padding: 1rem 3rem; font-size: 1.1rem;">
+                    Download Full Report (PDF)
+                </a>
+            </div>
+        </div>
+    </section>
 
-<div class="card">
-<p>
-ExoNova employs machine learning models such as:
-</p>
+    <!-- 11. RESOURCES SECTION -->
+    <section id="resources">
+        <div class="container">
+            <h2>Project Resources</h2>
+            <div class="grid-3 mt-2">
+                
+                <div class="card resource-card">
+                    <span class="resource-type">Documentation</span>
+                    <h4>AI-Based Space Debris Tracking and Avoidance System PDFs</h4>
+                    <p style="font-size: 0.9rem;">A collection of preliminary research papers and white papers discussing the theoretical framework of the project.</p>
+                    <a href="#" class="btn btn-outline" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Access Folder</a>
+                </div>
 
-<ul>
-<li>LSTM / GRU for trajectory prediction</li>
-<li>Kalman Filters for noise reduction</li>
-<li>Monte Carlo simulations for uncertainty</li>
-<li>Reinforcement Learning for avoidance planning</li>
-</ul>
+                <div class="card resource-card">
+                    <span class="resource-type">Component Design</span>
+                    <h4>AI_Swizzle_Nozzle_Autonomous_Debris_Avoidance - Copy.pdf</h4>
+                    <p style="font-size: 0.9rem;">Specific technical documentation regarding the thruster nozzle actuation logic used in the autonomous avoidance module.</p>
+                    <a href="AI_Swizzle_Nozzle_Autonomous_Debris_Avoidance%20-%20Copy.pdf" download class="btn btn-outline" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Download PDF</a>
+                </div>
 
-<p>
-The AI models continuously learn from updated orbital data,
-solar activity variations, and historical conjunction events.
-</p>
-</div>
+                <div class="card resource-card">
+                    <span class="resource-type">Visual Assets</span>
+                    <h4>Schematics & Simulations</h4>
+                    <p style="font-size: 0.9rem;">High-resolution renders of the simulation environment and hardware diagrams.</p>
+                    <button class="btn btn-outline" style="font-size: 0.8rem; padding: 0.5rem 1rem; cursor: default; opacity: 0.7;">Available on Request</button>
+                </div>
 
-</div>
-</section>
+            </div>
+        </div>
+    </section>
 
-<!-- =========================
-     FUTURE
-========================= -->
-<section id="future">
-<div class="container">
-<h2 class="section-title">Future Scope</h2>
+    <!-- 12. FUTURE SCOPE SECTION -->
+    <section id="future">
+        <div class="container">
+            <h2>Future Scope & Roadmap</h2>
+            <p>While Phase 1 focuses on tracking and prediction, the roadmap for ExoNova extends into active debris remediation and deep space applications.</p>
+            
+            <ul class="future-list mt-2">
+                <li>
+                    <strong>Real-Time Satellite Integration</strong>
+                    Establish direct telemetry uplinks to operational satellites to close the loop between prediction and maneuver execution without human ground control.
+                </li>
+                <li>
+                    <strong>Autonomous Maneuver Execution</strong>
+                    Upgrade the RL agents to have direct control over propulsion systems, enabling fully autonomous "evasive maneuvers" in critical emergencies.
+                </li>
+                <li>
+                    <strong>Global Sensor Networks</strong>
+                    Integrate data from private sector radar arrays and university observatories to create a unified, global observation mesh for improved coverage.
+                </li>
+                <li>
+                    <strong>Space Debris Removal Planning</strong>
+                    Extend the AI models to optimize capture trajectories for active debris removal (ADR) missions, such as harpoons or nets.
+                </li>
+                <li>
+                    <strong>Deep Space Extension</strong>
+                    Adapt the tracking algorithms for cis-lunar space and Mars transfer orbits to support future interplanetary exploration missions.
+                </li>
+            </ul>
+        </div>
+    </section>
 
-<div class="card">
-<ul>
-<li>Autonomous satellite maneuver planning</li>
-<li>Real-time collision alerts</li>
-<li>Integration with global STM frameworks</li>
-<li>Cislunar and deep-space tracking</li>
-<li>AI-guided debris removal missions</li>
-</ul>
-</div>
-
-</div>
-</section>
-
-<!-- =========================
-     FOOTER
-========================= -->
-<footer>
-<p>© 2023 ExoNova Project</p>
-<p>Static research website hosted on GitHub Pages</p>
-<p>No live tracking services are provided</p>
-</footer>
+    <!-- 13. FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">ExoNova</div>
+            <p class="footer-disclaimer">
+                This is a static informational research project website. All data and systems presented are for educational and research purposes. <br>
+                Not affiliated with NASA, ESA, or ISRO, though methodologies adhere to international space operations standards.
+            </p>
+            <p class="copyright">
+                &copy; 2023 ExoNova Research Team. All rights reserved. <br>
+                <span style="font-size: 0.75rem; color: #333;">GitHub Pages Compatible • No External Dependencies</span>
+            </p>
+        </div>
+    </footer>
 
 </body>
 </html>
